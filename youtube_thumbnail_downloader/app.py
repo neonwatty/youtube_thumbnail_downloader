@@ -70,28 +70,31 @@ def button_logic(youtube_urls: list) -> None:
 youtube_urls = []
 if uploaded_file is not None:
     if text_urls is not None:
-        st.warning("you can enter urls manually or from file but not both", icon="⚠️")
-        st.stop()
+        if len(text_urls.strip()) > 0:
+            st.warning("you can enter urls manually or from file but not both", icon="⚠️")
+            st.stop()
     
     if uploaded_file.type == "text/plain":
         from io import StringIO
-
+        
         stringio = StringIO(uploaded_file.read().decode("utf-8"))
         for line in stringio:
             youtube_urls.append(line.strip())
 
+
 if text_urls is not None:
-    if uploaded_file is not None:
-        st.warning("you can enter urls manually or from file but not both", icon="⚠️")
-        st.stop()
+    if len(text_urls.strip()) > 0:
+        if uploaded_file is not None:
+            st.warning("you can enter urls manually or from file but not both", icon="⚠️")
+            st.stop()
         
-    try:
-        text_urls_split = text_urls.split(",")
-        text_urls_split = [v.strip() for v in text_urls_split]
-        youtube_urls = text_urls_split
-    except:
-        st.warning("please check your manually entered urls", icon="⚠️") 
-        st.stop()
+        try:
+            text_urls_split = text_urls.split(",")
+            text_urls_split = [v.strip() for v in text_urls_split]
+            youtube_urls = text_urls_split
+        except:
+            st.warning("please check your manually entered urls", icon="⚠️") 
+            st.stop()
     
     with st.spinner(text="thumbnail pull in progress..."):
         button_logic(youtube_urls)
